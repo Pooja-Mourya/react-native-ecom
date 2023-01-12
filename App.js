@@ -1,13 +1,16 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
+import {Text} from 'react-native';
 import {Provider} from 'react-redux';
-import Store from './src/redux/Store';
-import RootNavigation from './src/navigation/RootNavigation';
-import Nesting from './nesting/Nesting';
+import MyStack from './src/navigation/MyStack';
+import {Store} from './src/redux/Store';
+
 const App = () => {
   return (
     <Provider store={Store}>
-      <RootNavigation />
-      {/* <Nesting /> */}
+      <NavigationContainer>
+        <MyStack />
+      </NavigationContainer>
     </Provider>
   );
 };
