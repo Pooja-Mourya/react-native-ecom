@@ -6,6 +6,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {userLoginFun} from '../../redux/slice/UserSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
+import {Alert} from 'react-native';
+import axios from 'axios';
 
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
@@ -22,11 +24,11 @@ const Login = ({navigation}) => {
     };
     try {
       const result = await ApiMethods.postData(url, params, null);
-      console.log('result', result?.data);
+      //   console.log('result', result?.data);
       setLoginUser(result?.data);
       dispatch(userLoginFun(result?.data?.payload));
       if (result?.data?.payload?.token) {
-        navigation.navigate('Products', result?.data?.payload);
+        navigation.navigate('Screens');
       }
       AsyncStorage.setItem('@user', JSON.stringify(result?.data?.payload));
     } catch (error) {
@@ -48,23 +50,22 @@ const Login = ({navigation}) => {
       return false;
     }
   };
+
   useEffect(() => {
-    // console.log('loginUser', loginUser?.payload.email);
-    // print();
     if (print()) {
-      navigation.dispatch(
-        CommonActions.navigate({
-          name: 'Products',
-          index: 0,
-        }),
-      );
+      //   navigation.dispatch(
+      //     CommonActions.navigate({
+      //       name: 'Screens',
+      //       index: 0,
+      //     }),
+      //   );
+      navigation.navigate('Screens');
     }
   }, [loginUser]);
 
   return (
-    <View>
+    <View style={{flex: 1, justifyContent: 'center', marginHorizontal: 50}}>
       <Text>Login</Text>
-      <Text>{loginUser?.payload?.token}</Text>
       <TextInput
         placeholder="Email..."
         value={email}
@@ -76,8 +77,6 @@ const Login = ({navigation}) => {
         onChangeText={e => setPassword(e)}
       />
       <Button title="Submit" onPress={submitHandle} />
-
-      {/* <Text>user:{user}</Text> */}
     </View>
   );
 };

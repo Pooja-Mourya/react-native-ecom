@@ -5,7 +5,12 @@ export default {
   base_url: `${domain}/api/`,
   endPoint: {
     login: 'user-login',
+    userManagement: 'user-management',
+    userList: 'user-managements',
     productList: 'products',
     product: 'product',
+    logout: 'user-logout',
+    stockList: 'stock-managements',
+    createStock: 'stock-management',
   },
 };

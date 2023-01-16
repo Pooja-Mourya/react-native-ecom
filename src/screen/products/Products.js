@@ -3,8 +3,10 @@ import React, {useEffect, useState} from 'react';
 import ApiMethods from '../../axiosMethod/ApiMethods';
 import Constants from '../../axiosMethod/Constants';
 import {useSelector} from 'react-redux';
+import {Button} from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const Products = () => {
+const Products = ({navigation}) => {
   let userToken = useSelector(state => state?.user?.user?.token);
   //   console.log('userToken', userToken);
 
@@ -13,8 +15,8 @@ const Products = () => {
     let url = Constants.endPoint.productList;
     try {
       const result = await ApiMethods.postData(url, null, userToken);
-      //   console.log(' list result', JSON.stringify(result?.data?.payload));
-      setListData(JSON.stringify(result?.data?.payload));
+      console.log(' list result', JSON.stringify(result?.data?.payload));
+      setListData(result?.data?.payload);
     } catch (error) {
       console.log('error', error);
     }
@@ -26,9 +28,34 @@ const Products = () => {
 
   //   console.log('listData', listData);
   return (
-    <View>
-      <Text>Products</Text>
-    </View>
+    <>
+      <Button title="add" onPress={() => navigation.navigate('AddProducts')} />
+      <View
+        style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}
+      >
+        <View>
+          <Text>Products</Text>
+        </View>
+      </View>
+      <View>
+        <FlatList
+          data={listData}
+          keyExtractor={ide => ide.id}
+          renderItem={({item}) => {
+            return (
+              <View
+                style={{margin: 10, flex: 1, flexDirection: 'row', padding: 10}}
+              >
+                <Text>{item.name}</Text>
+                <AntDesign name="edit" size={20} color={'cyan'} />
+                <View style={{width: 10}}></View>
+                <AntDesign name="delete" size={20} color={'tomato'} />
+              </View>
+            );
+          }}
+        />
+      </View>
+    </>
   );
 };
 
