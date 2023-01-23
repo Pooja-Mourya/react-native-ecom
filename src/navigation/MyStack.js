@@ -9,6 +9,8 @@ import AddStock from '../screen/productStock/AddStock';
 import Screens from '../screen/Screens';
 import StockList from '../screen/productStock/StockList';
 import UserList from '../screen/user/UserList';
+import FormHook from '../screen/formhook/FormHook';
+import ReactHookForm from '../screen/formhook/ReactHookForm';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,8 @@ function MyStack() {
       <Stack.Screen name="Screens" component={Screens} />
       <Stack.Screen name="StockList" component={StockList} />
       <Stack.Screen name="UserList" component={UserList} />
+      <Stack.Screen name="FormHook" component={FormHook} />
+      <Stack.Screen name="ReactHookForm" component={ReactHookForm} />
     </Stack.Navigator>
   );
 }
