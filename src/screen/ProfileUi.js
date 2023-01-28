@@ -26,10 +26,7 @@ const ProfileUi = ({navigation}) => {
   const [getData, setGetData] = useState([]);
 
   //   const auth = useSelector(state => state.loginAuth.loginUser);
-  const user = firebase.auth().currentUser;
-  if (user == 0) {
-    Alert.alert('required user login');
-  }
+
   //   console.log('user', user);
   const selectImage = async () => {
     try {
@@ -133,7 +130,7 @@ const ProfileUi = ({navigation}) => {
 
         <View style={{paddingHorizontal: 20}}>
           <Text style={{fontWeight: '700', fontSize: 16, color: 'deeppink'}}>
-            User: {user.email}
+            User: Alex
           </Text>
           <View style={{marginTop: 35}}>
             <Text style={styles.experience}>PRODUCT CATEGORY</Text>

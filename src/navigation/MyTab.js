@@ -54,16 +54,6 @@ const MyTab = () => {
         }}
       />
       <Tab.Screen
-        name="MyStack"
-        component={RootNavigation}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
         name="Favorite"
         component={FavoriteUi}
         options={{

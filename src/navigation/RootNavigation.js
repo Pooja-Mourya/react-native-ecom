@@ -19,7 +19,6 @@ import MyTabCart from '../screen/MyTabCart';
 import AddProduct from '../dashboard/AddProduct';
 import ResentAddProduct from '../dashboard/ResentAddProduct';
 import ViewProduct from '../dashboard/ViewProduct';
-import Users from '../user/Users';
 import WelcomeScreen from '../dashboard/WelcomeScreen';
 import FilterFunction from '../dashboard/FilterFunction';
 import UpiPayment from '../components/Layout/UpiPayment';
@@ -121,11 +120,6 @@ const RootNavigation = () => {
         <Stack.Screen
           name="ViewProduct"
           component={ViewProduct}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Users"
-          component={Users}
           options={{headerShown: false}}
         />
         <Stack.Screen

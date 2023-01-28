@@ -9,9 +9,9 @@ import {
 import React, {useState, useEffect} from 'react';
 import {Colors} from '../assets/Assets';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import firestore, {firebase} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import axios from 'axios';
 
 GoogleSignin.configure({
   webClientId:
@@ -23,62 +23,39 @@ const LoginUi = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [clicked, setClicked] = useState(true);
   const [message, setMessage] = useState('');
-  //   const user = firebase.auth().currentUser;
 
-  //   useEffect(() => {
-  //     if (user) {
-  //       console.log('User email: ', user);
-  //     }
-  //   }, [user]);
+  const [state, setState] = useState({
+    name: 'name',
+    age: 'age',
+    address: 'address',
+  });
 
   const passwordEyeIcon = () => {
     setClicked(!clicked);
   };
 
-  const submitFunction0 = () => {
-    // if (!password && !email) {
-    //   Alert.alert('login Successful');
-    //   navigation.navigate('HomeUi');
-    // } else {
-    //   Alert.alert('for login enter email and password');
-    // }
-
-    const subscriber = firestore()
-      .collection('registration')
-      .orderBy(_email, _password)
-      .get({
-        email: {email},
-        password: {password},
-      })
-      .then(() => {
-        console.log('User login!');
-      });
-
-    if ((!email, !password)) {
-      alert('enter correct credentials');
-    } else {
-      navigation.navigate('HomeUi');
-    }
-    return subscriber;
-  };
-
   const submitFunction = async () => {
-    if (email.length <= 0 && password.length <= 0) {
-      Alert.alert('pls enter email or password');
-      return;
-    }
+    const headers = {
+      contentType: 'application/json',
+    };
+
+    const config = {
+      headers: headers,
+    };
     try {
-      await auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          console.log('User signed');
-          setTimeout(() => {
-            navigation.navigate('MyTab');
-          }, 2000);
-        });
+      await axios({
+        method: 'post',
+        url: 'http://10.0.2.2:3002/signInAndroid',
+        data: {
+          email: email,
+          password: password,
+        },
+        config,
+      });
+      console.log('signup ok ');
+      navigation.navigate('SettingUi');
     } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+      console.log('error', error);
     }
   };
 
@@ -105,6 +82,16 @@ const LoginUi = ({navigation}) => {
             color={Colors.darkPlaceHoldColor}
           />
         </View>
+        {/* <TextInput
+          placeholderTextColor={Colors.darkPrimary}
+          style={styles.inputStyle}
+          placeholder="name"
+          value={state.name}
+          onChangeText={n => {
+            console.log('first', n);
+            setState({...state, name: n.name});
+          }}
+        /> */}
         <TextInput
           placeholderTextColor={Colors.darkPrimary}
           style={styles.inputStyle}

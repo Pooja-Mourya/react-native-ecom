@@ -11,58 +11,53 @@ import {
 import React, {useState} from 'react';
 import {Colors} from '../assets/Assets';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import auth from '@react-native-firebase/auth';
-import {Dropdown} from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import firestore from '@react-native-firebase/firestore';
-const data = [
-  {label: 'Seller', value: '0'},
-  {label: 'Buyer', value: '1'},
-];
+import axios from 'axios';
 
 const RegisterUi = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [cPassword, setCPassword] = useState('');
+  //   const [email, setEmail] = useState('');
+  //   const [password, setPassword] = useState('');
+  //   const [cPassword, setCPassword] = useState('');
 
   const [clicked, setClicked] = useState(true);
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState('');
-  const [userType, setUserType] = useState('');
-  const [isFocus, setIsFocus] = useState(false);
 
+  const [state, setState] = useState({
+    email: '',
+    password: '',
+    cPassword: '',
+  });
+
+  const handleOnchange = (name, value) => {
+    setState({...state, [name]: value});
+  };
   const passwordEyeIcon = () => {
     setClicked(!clicked);
   };
 
+  console.log('first', ...state);
   const handleSubscriber = async () => {
+    const headers = {
+      contentType: 'application/json',
+    };
+
+    const config = {
+      headers: headers,
+    };
     try {
-      if (email.length > 0 && password.length > 0 && password === cPassword) {
-        await auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            firestore().collection('registration').add({
-              userType: {userType},
-              email: {email},
-              password: {password},
-            });
-          })
-          .then(() => {
-            setUserType('');
-            setEmail('');
-            setPassword('');
-            setTimeout(() => {
-              navigation.navigate('LoginUi');
-            }, 3000);
-            setSuccess('registration successful ');
-            console.log('User signed');
-          });
-      } else {
-        Alert.alert('pls enter email or password');
-      }
+      await axios({
+        method: 'post',
+        url: 'http://10.0.2.2:3002/signupAndroid',
+        data: {
+          email: state.email,
+          password: state.cPassword,
+          password: state.password,
+        },
+        config,
+      });
+      console.log('signup ok ');
     } catch (error) {
-      console.error(error);
-      setMessage(error.message);
+      console.log('error', error);
     }
   };
 
@@ -98,56 +93,27 @@ const RegisterUi = ({navigation}) => {
           borderRadius: 12,
         }}
       >
-        <Dropdown
-          style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={data}
-          search
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? 'Select userType' : '...'}
-          searchPlaceholder="Search..."
-          value={userType}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-            setUserType(item);
-            setIsFocus(false);
-          }}
-          renderLeftIcon={() => (
-            <AntDesign
-              style={styles.icon}
-              color={isFocus ? 'blue' : 'black'}
-              name="Safety"
-              size={20}
-            />
-          )}
-        />
         <TextInput
           placeholderTextColor={Colors.darkPrimary}
           style={styles.inputStyle}
           placeholder="Email"
-          value={email}
-          onChangeText={email => setEmail(email)}
+          value={state.email}
+          onChangeText={e => handleOnchange('email', e)}
         />
         <TextInput
           placeholderTextColor={Colors.darkPrimary}
           style={styles.inputStyle}
           placeholder="Password"
-          value={password}
-          onChangeText={password => setPassword(password)}
+          value={state.password}
+          onChangeText={p => handleOnchange('password', p)}
           secureTextEntry={true}
         />
         <TextInput
           placeholderTextColor={Colors.darkPrimary}
           style={styles.inputStyle}
           placeholder="Confirm Password"
-          value={cPassword}
-          onChangeText={cPassword => setCPassword(cPassword)}
+          value={state.cPassword}
+          onChangeText={c => handleOnchange('cPassword', c)}
           secureTextEntry={clicked}
         />
         <View style={styles.eyeContainer}>
@@ -218,7 +184,7 @@ const styles = StyleSheet.create({
   },
   eyeContainer: {
     position: 'absolute',
-    marginTop: 175,
+    marginTop: 143,
     marginLeft: 300,
     zIndex: 2,
     // marginHorizontal: 20,
