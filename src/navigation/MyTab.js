@@ -15,6 +15,7 @@ import auth from '@react-native-firebase/auth';
 import {firebase} from '@react-native-firebase/database';
 import {color} from 'react-native-reanimated';
 import RootNavigation from './RootNavigation';
+import RegisterUi from '../screen/RegisterUi';
 
 const Tab = createBottomTabNavigator();
 
@@ -81,33 +82,30 @@ const MyTab = () => {
           tabBarBadge: tabCart.length,
         }}
       />
-      {!user1 ? (
-        <Tab.Screen
-          name="MyDrawer"
-          component={MyDrawer}
-          options={{
-            tabBarLabel: 'MyDrawer',
-            tabBarIcon: ({color, size}) => (
-              <AntDesign name="bars" color={color} size={size} />
-            ),
+      {/* <Tab.Screen
+        name="MyDrawer"
+        component={MyDrawer}
+        options={{
+          tabBarLabel: 'MyDrawer',
+          tabBarIcon: ({color, size}) => (
+            <AntDesign name="bars" color={color} size={size} />
+          ),
 
-            headerShown: false,
-          }}
-        />
-      ) : (
-        <Tab.Screen
-          name="Profile"
-          component={ProfileUi}
-          options={{
-            tabBarLabel: 'Profile',
-            tabBarIcon: ({color, size}) => (
-              <AntDesign name="user" color={color} size={size} />
-            ),
+          headerShown: false,
+        }}
+      /> */}
+      <Tab.Screen
+        name="RegisterUi"
+        component={RegisterUi}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <AntDesign name="user" color={color} size={size} />
+          ),
 
-            headerShown: false,
-          }}
-        />
-      )}
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 };

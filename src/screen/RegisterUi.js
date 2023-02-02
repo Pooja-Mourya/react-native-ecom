@@ -7,114 +7,165 @@ import {
   TouchableOpacity,
   View,
   Button,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from '../assets/Assets';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import {useForm, Controller} from 'react-hook-form';
+import DocumentPicker from 'react-native-document-picker';
+import DropdownCom from '../components/Dropdown';
+import CommonInput from '../components/CommonInput';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const Data = [
+  {label: 'user', value: '1'},
+  {label: 'admin', value: '2'},
+];
 const RegisterUi = ({navigation}) => {
-  //   const [email, setEmail] = useState('');
-  //   const [password, setPassword] = useState('');
-  //   const [cPassword, setCPassword] = useState('');
-
   const [clicked, setClicked] = useState(true);
-  const [message, setMessage] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const [state, setState] = useState({
-    email: '',
-    password: '',
-    cPassword: '',
-  });
-
-  const handleOnchange = (name, value) => {
-    setState({...state, [name]: value});
-  };
+  const [avatar, setAvatar] = useState('');
   const passwordEyeIcon = () => {
     setClicked(!clicked);
   };
 
-  console.log('first', ...state);
-  const handleSubscriber = async () => {
-    const headers = {
-      contentType: 'application/json',
-    };
-
-    const config = {
-      headers: headers,
-    };
+  const selectImage = async () => {
     try {
-      await axios({
-        method: 'post',
-        url: 'http://10.0.2.2:3002/signupAndroid',
-        data: {
-          email: state.email,
-          password: state.cPassword,
-          password: state.password,
-        },
-        config,
+      const res = await DocumentPicker.pick({
+        type: DocumentPicker.types.images,
       });
-      console.log('signup ok ');
-    } catch (error) {
-      console.log('error', error);
+      setAvatar(res);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        alert('Canceled from single doc picker');
+      } else {
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
     }
   };
 
+  //   const handleSubscriber = async () => {
+  //     const headers = {
+  //       contentType: 'multipartData/form-data',
+  //     };
+
+  //     const config = {
+  //       headers: headers,
+  //     };
+  //     try {
+  //       await axios({
+  //         method: 'post',
+  //         url: 'http://10.0.2.2:3002/signupAndroid',
+  //         data: {
+  //           email: state.email,
+  //           password: state.cPassword,
+  //           password: state.password,
+  //         },
+  //         config,
+  //       });
+  //       console.log('signup ok ');
+  //     } catch (error) {
+  //       console.log('error', error);
+  //     }
+  //   };
+
+  const {control, watch, handleSubmit, onSubmit} = useForm({
+    defaultValues: {
+      user: '',
+      email: '',
+      image: '',
+      password: '',
+    },
+  });
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.containerIcon}>
-        <FontAwesome
-          name="shopping-basket"
-          size={150}
-          color={Colors.darkPlaceHoldColor}
-        />
-      </View>
-      {!success && (
-        <Text
-          style={{
-            color: 'green',
-            padding: 8,
-            fontSize: 14,
-            backgroundColor: success ? Colors.ultraLightPrimary : null,
-            marginBottom: 10,
-            borderRadius: 5,
-            height: 50,
-          }}
-        >
-          {success}
-        </Text>
-      )}
       <View
         style={{
           backgroundColor: 'white',
           padding: 10,
           elevation: 12,
           borderRadius: 12,
+          justifyContent: 'center',
+          marginVertical: 100,
         }}
       >
-        <TextInput
-          placeholderTextColor={Colors.darkPrimary}
-          style={styles.inputStyle}
-          placeholder="Email"
-          value={state.email}
-          onChangeText={e => handleOnchange('email', e)}
+        <CommonInput
+          control={control}
+          name="image"
+          rules={{required: true}}
+          placeholder="select image"
+          label="image"
+          mode="flat"
+          style={styles.input}
+          rightIcon={
+            <MaterialCommunityIcons
+              onChange={() => selectImage()}
+              icon="cloud-upload-outline"
+              size={30}
+            />
+          }
         />
-        <TextInput
-          placeholderTextColor={Colors.darkPrimary}
-          style={styles.inputStyle}
-          placeholder="Password"
-          value={state.password}
-          onChangeText={p => handleOnchange('password', p)}
-          secureTextEntry={true}
+        {avatar ? (
+          <Image
+            style={{
+              width: 100,
+              height: 100,
+              borderWidth: 1,
+              borderRadius: 100,
+            }}
+            source={{uri: avatar?.[0]?.uri}}
+          />
+        ) : null}
+        {avatar ? (
+          <Text style={{}}>
+            <AntDesign
+              onPress={() => setAvatar()}
+              name={'delete'}
+              size={20}
+              color="red"
+            />
+          </Text>
+        ) : null}
+
+        <Controller
+          control={control}
+          name="gender"
+          // rules={{required: true}}
+          render={({field: {onChange, onBlur, value}}) => (
+            <DropdownCom
+              name={'user'}
+              control={control}
+              rules={{required: true}}
+              data={Data}
+              labelField={'label'}
+              valueField={`value`}
+              placeholder={'select user'}
+              value={value}
+              onPressItem={onChange}
+              onBlur={onBlur}
+            />
+          )}
         />
-        <TextInput
-          placeholderTextColor={Colors.darkPrimary}
-          style={styles.inputStyle}
-          placeholder="Confirm Password"
-          value={state.cPassword}
-          onChangeText={c => handleOnchange('cPassword', c)}
-          secureTextEntry={clicked}
+        <CommonInput
+          control={control}
+          name="email"
+          rules={{required: true}}
+          placeholder="email"
+          label="email"
+          mode="flat"
+          style={styles.input}
+        />
+        <CommonInput
+          control={control}
+          name="password"
+          rules={{required: true}}
+          placeholder="password"
+          label="password"
+          mode="flat"
         />
         <View style={styles.eyeContainer}>
           <Text>
@@ -127,34 +178,14 @@ const RegisterUi = ({navigation}) => {
           </Text>
         </View>
         <TouchableOpacity>
-          <Text onPress={() => handleSubscriber()} style={styles.btnStyle}>
+          <Text
+            onPress={handleSubmit(() => console.log('first'))}
+            style={styles.btnStyle}
+          >
             Submit
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={{padding: 5, marginTop: 10}}>
-        <Text style={{color: 'red'}}>{message}</Text>
-      </View>
-
-      <View>
-        <Text
-          onPress={() => navigation.navigate('LoginUi')}
-          style={styles.btnStyle}
-        >
-          if are you register user Sign In
-        </Text>
-        {/* <Text
-          style={styles.btnStyle}
-          onPress={() => navigation.navigate('HomeUi')}
-        >
-          without signUp shopping
-        </Text> */}
-      </View>
-      {/* <View>
-        <Text onPress={() => navigation.navigate('Users')}>
-          <AntDesign name="arrowleft" /> Create Account as a seller
-        </Text>
-      </View> */}
     </ScrollView>
   );
 };

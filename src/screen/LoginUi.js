@@ -12,6 +12,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import axios from 'axios';
+import {CommonActions} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import {useDetailAction} from '../redux/loginUser/UserSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 GoogleSignin.configure({
   webClientId:
@@ -19,16 +23,13 @@ GoogleSignin.configure({
 });
 
 const LoginUi = ({navigation}) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state?.loginAuth?.loginUser?.data);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [access, setAccess] = useState('');
   const [clicked, setClicked] = useState(true);
   const [message, setMessage] = useState('');
-
-  const [state, setState] = useState({
-    name: 'name',
-    age: 'age',
-    address: 'address',
-  });
 
   const passwordEyeIcon = () => {
     setClicked(!clicked);
@@ -43,38 +44,40 @@ const LoginUi = ({navigation}) => {
       headers: headers,
     };
     try {
-      await axios({
+      const LoginFor = await axios({
         method: 'post',
+        config,
         url: 'http://10.0.2.2:3002/signInAndroid',
         data: {
           email: email,
           password: password,
         },
-        config,
       });
-      console.log('signup ok ');
-      navigation.navigate('SettingUi');
+      setAccess(LoginFor?.payload?.data);
+      //   alert('signup ok ');
+      //   console.log('LoginFor', LoginFor.data);
+      if (user) {
+        // AsyncStorage.setItem('@user', JSON.stringify(LoginFor.data));
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: 'SettingUi'}],
+          }),
+        );
+      }
+
+      dispatch(useDetailAction(LoginFor));
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const loginWithGoogle = async () => {
-    // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
-  };
+  //   console.log('access', access);
 
   return (
     <>
       <View style={styles.container}>
+        <Text>{user}</Text>
         <View style={styles.containerIcon}>
           <FontAwesome
             name="shopping-basket"
@@ -82,16 +85,6 @@ const LoginUi = ({navigation}) => {
             color={Colors.darkPlaceHoldColor}
           />
         </View>
-        {/* <TextInput
-          placeholderTextColor={Colors.darkPrimary}
-          style={styles.inputStyle}
-          placeholder="name"
-          value={state.name}
-          onChangeText={n => {
-            console.log('first', n);
-            setState({...state, name: n.name});
-          }}
-        /> */}
         <TextInput
           placeholderTextColor={Colors.darkPrimary}
           style={styles.inputStyle}

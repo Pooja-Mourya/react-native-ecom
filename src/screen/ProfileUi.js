@@ -16,17 +16,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Colors, fonts} from '../assets/Assets';
 import DocumentPicker from 'react-native-document-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import firestore, {firebase} from '@react-native-firebase/firestore';
-// import {utils} from '@react-native-firebase/app';
-// import storage from '@react-native-firebase/storage';
+import {useSelector} from 'react-redux';
 
 const ProfileUi = ({navigation}) => {
   const [avatar, setAvatar] = useState('');
   const [avatar1, setAvatar1] = useState('');
   const [getData, setGetData] = useState([]);
 
-  //   const auth = useSelector(state => state.loginAuth.loginUser);
+  //   const user = useSelector(e => e?.loginAuth?.loginUser?.payload?.data?.email);
 
+  //   console.log('user', user);
   //   console.log('user', user);
   const selectImage = async () => {
     try {
@@ -53,27 +52,6 @@ const ProfileUi = ({navigation}) => {
     }
   };
 
-  const fetchData = async () => {
-    await firestore()
-      .collection('users')
-      .get()
-      .then(querySnapshot => {
-        console.log('Total users: ', querySnapshot.size);
-        let getData = [];
-        querySnapshot.forEach(documentSnapshot => {
-          getData.push({
-            ...documentSnapshot.data(),
-            id: documentSnapshot.id,
-          });
-        });
-        // console.log({...getData.shift()});
-        setGetData({...getData.shift()});
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
   return (
     <View style={{flex: 1}}>
       <View style={styles.mainContainer}>

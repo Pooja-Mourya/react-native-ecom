@@ -57,21 +57,6 @@ const HomeUi = ({navigation}) => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const user = firebase.auth().currentUser;
-  if (user == 0) {
-    console.log('User email: ', user.email);
-    Alert.alert('user login');
-  }
-
-  useEffect(() => {
-    setLoading(true);
-    console.log('true', true);
-    if (collection) {
-      dispatch(fetchData());
-      setLoading(false);
-      console.log('false', false);
-    }
-  }, []);
   return (
     <>
       <View>

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 const StudentSchema = new mongoose.Schema({
   name: {
@@ -10,15 +10,15 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     unique: [true, 'this email is already register'],
     required: true,
-    validate: (value) => {
+    validate: value => {
       if (!validator.isEmail(value)) {
-        throw new Error('invalid email')
+        throw new Error('invalid email');
       }
     },
   },
   number: {
     type: Number,
-    required: true,
+    // required: true,
   },
   address: {
     type: String,
@@ -28,8 +28,8 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     // requited: true,
   },
-})
+});
 
-const Student = mongoose.model('Student', StudentSchema)
+const Student = mongoose.model('Student', StudentSchema);
 
-module.exports = Student
+module.exports = Student;
