@@ -2,6 +2,9 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
+const Home = () => {
+  return <Text>hfb</Text>;
+};
 
 function MyStack() {
   return (
@@ -22,14 +25,14 @@ function MyStack() {
       />
       <Stack.Screen
         name="Profile"
-        component={Profile}
+        component={Home}
         options={{
           title: 'My profile',
         }}
       />
       <Stack.Screen
         name="Settings"
-        component={Settings}
+        component={Home}
         options={{
           gestureEnabled: false,
         }}

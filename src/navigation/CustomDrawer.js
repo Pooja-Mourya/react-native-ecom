@@ -6,14 +6,8 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import {Colors, fonts} from '../assets/Assets';
-import {firebase} from '@react-native-firebase/firestore';
 
 const CustomDrawer = props => {
-  const user = firebase.auth().currentUser;
-  if (user == 0) {
-    Alert.alert('required user login');
-    console.log('user drawer', user.email);
-  }
   return (
     <View style={{flex: 1, backgroundColor: Colors.shadowColorAndroidDefault}}>
       <View style={styles.imageContainer}>

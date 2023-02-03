@@ -1,11 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import ProfileUi from './ProfileUi';
 
-const SettingUi = () => {
-  return <ProfileUi />;
+const AboutApp = () => {
+  return (
+    <View>
+      <Text>AboutApp</Text>
+    </View>
+  );
 };
 
-export default SettingUi;
+export default AboutApp;
 
 const styles = StyleSheet.create({});

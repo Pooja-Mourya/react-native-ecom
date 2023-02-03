@@ -47,31 +47,6 @@ const RegisterUi = ({navigation}) => {
     }
   };
 
-  //   const handleSubscriber = async () => {
-  //     const headers = {
-  //       contentType: 'multipartData/form-data',
-  //     };
-
-  //     const config = {
-  //       headers: headers,
-  //     };
-  //     try {
-  //       await axios({
-  //         method: 'post',
-  //         url: 'http://10.0.2.2:3002/signupAndroid',
-  //         data: {
-  //           email: state.email,
-  //           password: state.cPassword,
-  //           password: state.password,
-  //         },
-  //         config,
-  //       });
-  //       console.log('signup ok ');
-  //     } catch (error) {
-  //       console.log('error', error);
-  //     }
-  //   };
-
   const {control, watch, handleSubmit, onSubmit} = useForm({
     defaultValues: {
       user: '',
@@ -83,6 +58,7 @@ const RegisterUi = ({navigation}) => {
 
   return (
     <ScrollView style={styles.container}>
+      <Button title="upload" onPress={() => selectImage()} />
       <View
         style={{
           backgroundColor: 'white',
@@ -150,6 +126,7 @@ const RegisterUi = ({navigation}) => {
             />
           )}
         />
+
         <CommonInput
           control={control}
           name="email"

@@ -1,28 +1,9 @@
 import {NavigationContainer, SafeAreaProvider} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
-import DetailUi from '../screen/DetailUi';
-import CartUi from '../screen/CartUi';
-import HomeUi from '../screen/HomeUi';
-import FirstScreen from '../screen/FirstScreen';
 import MyTab from './MyTab';
 import MyDrawer from './MyDrawer';
-import MakePayment from '../screen/MakePayment';
-import CashPayment from '../screen/CashPayment';
-import LoginUi from '../screen/LoginUi';
-import RegisterUi from '../screen/RegisterUi';
-import LogoutUi from '../screen/LogoutUi';
-import SettingUi from '../screen/SettingUi';
-import ViewOrder from '../screen/ViewOrder';
-import FavoriteUi from '../screen/FavoriteUi';
-import MyTabCart from '../screen/MyTabCart';
-import AddProduct from '../dashboard/AddProduct';
-import ResentAddProduct from '../dashboard/ResentAddProduct';
-import ViewProduct from '../dashboard/ViewProduct';
-import WelcomeScreen from '../dashboard/WelcomeScreen';
-import FilterFunction from '../dashboard/FilterFunction';
-import UpiPayment from '../components/Layout/UpiPayment';
-import NatBanking from '../components/Layout/NatBanking';
+import AboutApp from '../screen/first/AboutApp';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,18 +11,24 @@ const RootNavigation = () => {
   //   console.log('userCredential', userCredential);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FirstScreen">
-        <Stack.Screen
-          name="MyDrawer"
-          component={MyDrawer}
-          options={{headerShown: false}}
-        />
+      <Stack.Navigator initialRouteName="AboutApp">
         <Stack.Screen
           name="MyTab"
           component={MyTab}
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="MyDrawer"
+          component={MyDrawer}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AboutApp"
+          component={AboutApp}
+          options={{headerShown: false}}
+        />
+
+        {/* <Stack.Screen
           name="FirstScreen"
           component={FirstScreen}
           options={{headerShown: false}}
@@ -141,7 +128,7 @@ const RootNavigation = () => {
           name="FilterFunction"
           component={FilterFunction}
           options={{headerShown: false}}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
