@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import MyTab from './MyTab';
 import MyDrawer from './MyDrawer';
 import AboutApp from '../screen/first/AboutApp';
+import Walkthrough from '../screen/first/Walkthrough';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ const RootNavigation = () => {
         <Stack.Screen
           name="AboutApp"
           component={AboutApp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Walkthrough"
+          component={Walkthrough}
           options={{headerShown: false}}
         />
 

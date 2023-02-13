@@ -1,8 +1,3 @@
-export const img = {
-  //   spBgTop: require('./img/Group21.png'),
-  //   nrt_sms_logo: require('./img/nrt_sms_logo.png'),
-};
-
 export const fonts = {
   bold: 'Poppins-Bold',
   boldItalic: 'Poppins-BoldItalic',
