@@ -16,7 +16,7 @@ import {ScrollView} from 'react-native';
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
 
-const Walkthrough = () => {
+const Walkthrough = ({navigation}) => {
   //   useState for Walkthrough2
 
   //   const [walk2Animated, setWalk2Animated] = useState(false);
@@ -85,10 +85,10 @@ const Walkthrough = () => {
             style={{
               backgroundColor: 'white',
               width: width / 2.5,
-              //   marginHorizontal: 101,
               borderRadius: 5,
               padding: 10,
             }}
+            onPress={() => navigation.navigate('NotificationApp')}
           >
             <Text
               style={{

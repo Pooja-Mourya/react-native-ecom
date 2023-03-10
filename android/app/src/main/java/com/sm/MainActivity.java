@@ -1,8 +1,9 @@
 package com.sm;
+
+import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
-import android.os.Bundle;
 
 public class MainActivity extends ReactActivity {
 
@@ -15,11 +16,11 @@ public class MainActivity extends ReactActivity {
     return "sm";
   }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);
-    }
+  }
+
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
    * you can specify the rendered you wish to use (Fabric or the older renderer).
@@ -30,7 +31,11 @@ public class MainActivity extends ReactActivity {
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
-    public MainActivityDelegate(ReactActivity activity, String mainComponentName) {
+
+    public MainActivityDelegate(
+      ReactActivity activity,
+      String mainComponentName
+    ) {
       super(activity, mainComponentName);
     }
 
@@ -42,5 +47,44 @@ public class MainActivity extends ReactActivity {
       return reactRootView;
     }
   }
-}
 
+  private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+    new ActivityResultContracts.RequestPermission(),
+    isGranted -> {
+      if (isGranted) {
+        // FCM SDK (and your app) can post notifications.
+      } else {
+        // TODO: Inform user that that your app will not show notifications.
+      }
+    }
+  );
+
+  private void askNotificationPermission() {
+    // This is only necessary for API level >= 33 (TIRAMISU)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      if (
+        ContextCompat.checkSelfPermission(
+          this,
+          Manifest.permission.POST_NOTIFICATIONS
+        ) ==
+        PackageManager.PERMISSION_GRANTED
+      ) {
+        // FCM SDK (and your app) can post notifications.
+      } else if (
+        shouldShowRequestPermissionRationale(
+          Manifest.permission.POST_NOTIFICATIONS
+        )
+      ) {
+        // TODO: display an educational UI explaining to the user the features that will be enabled
+        //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
+        //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
+        //       If the user selects "No thanks," allow the user to continue without notifications.
+      } else {
+        // Directly ask for the permission
+        requestPermissionLauncher.launch(
+          Manifest.permission.POST_NOTIFICATIONS
+        );
+      }
+    }
+  }
+}
