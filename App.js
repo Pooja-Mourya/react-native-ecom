@@ -1,12 +1,16 @@
+import {View, Text} from 'react-native';
 import React from 'react';
-import {Provider} from 'react-redux';
-import Store from './src/redux/Store';
+import Banner from './src/components/Home/Banner';
 import RootNavigation from './src/navigation/RootNavigation';
+import MyTab from './src/navigation/MyTab';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 const App = () => {
   return (
-    <Provider store={Store}>
-      <RootNavigation />
-    </Provider>
+    <NavigationContainer>
+      <MyTab />
+    </NavigationContainer>
   );
 };
 

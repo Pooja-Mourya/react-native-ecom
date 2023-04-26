@@ -1,38 +1,22 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import MyTab from './MyTab';
+import MyDrawer from './MyDrawer';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerMode: 'screen',
-        headerTintColor: 'white',
-        headerStyle: {backgroundColor: 'tomato'},
-      }}
-    >
+    <Stack.Navigator initialRouteName="MyTab">
       <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: 'Awesome app',
-        }}
+        name="MyTab"
+        component={MyTab}
+        options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          title: 'My profile',
-        }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          gestureEnabled: false,
-        }}
+        name="MyDrawer"
+        component={MyDrawer}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

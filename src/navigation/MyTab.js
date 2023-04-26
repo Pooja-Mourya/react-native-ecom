@@ -1,33 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import HomeUi from '../screen/HomeUi';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FavoriteUi from '../screen/FavoriteUi';
-import ProfileUi from '../screen/ProfileUi';
 import {Colors} from '../assets/Assets';
-import MyTabCart from '../screen/MyTabCart';
-import {useSelector} from 'react-redux';
-import MyDrawer from './MyDrawer';
-import auth from '@react-native-firebase/auth';
-import {firebase} from '@react-native-firebase/database';
-import {color} from 'react-native-reanimated';
-import RootNavigation from './RootNavigation';
-import RegisterUi from '../screen/RegisterUi';
+import Banner from '../components/Home/Banner';
+import Home from '../components/Home/Home';
+import About from '../components/about/About';
+import Services from '../components/services/Services';
+import Contact from '../components/contact/Contact';
 
 const Tab = createBottomTabNavigator();
 
 const MyTab = () => {
-  const like = useSelector(state => state.toCart.items);
-  const tabCart = useSelector(state => state.wishlist.wishlist);
-
-  const user1 = firebase.auth().currentUser;
-  if (user1) {
-    console.log('User email: ', user1.email, user1.userType);
-    // return setUserEmail(user1.email);
-  }
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -46,7 +30,7 @@ const MyTab = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeUi}
+        component={Home}
         options={{
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
@@ -55,54 +39,44 @@ const MyTab = () => {
         }}
       />
       <Tab.Screen
-        name="Favorite"
-        component={FavoriteUi}
+        name="About"
+        component={About}
         options={{
-          tabBarLabel: 'Favorite',
-          tabBarIcon: ({color, size}) => (
-            <MaterialIcons name="favorite-outline" color={color} size={size} />
-          ),
-          headerShown: false,
-          tabBarBadge: like.length,
-        }}
-      />
-      <Tab.Screen
-        name="Cart"
-        component={MyTabCart}
-        options={{
-          tabBarLabel: 'Cart',
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
-              name="cart-outline"
+              name="account-convert-outline"
               color={color}
               size={size}
             />
           ),
           headerShown: false,
-          tabBarBadge: tabCart.length,
         }}
       />
-      {/* <Tab.Screen
-        name="MyDrawer"
-        component={MyDrawer}
+      <Tab.Screen
+        name="Services"
+        component={Services}
         options={{
-          tabBarLabel: 'MyDrawer',
           tabBarIcon: ({color, size}) => (
-            <AntDesign name="bars" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="apple-keyboard-command"
+              color={color}
+              size={size}
+            />
           ),
-
           headerShown: false,
         }}
-      /> */}
+      />
       <Tab.Screen
-        name="RegisterUi"
-        component={RegisterUi}
+        name="Contact"
+        component={Contact}
         options={{
-          tabBarLabel: 'Profile',
           tabBarIcon: ({color, size}) => (
-            <AntDesign name="user" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="cellphone-link"
+              color={color}
+              size={size}
+            />
           ),
-
           headerShown: false,
         }}
       />
