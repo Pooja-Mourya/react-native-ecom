@@ -5,6 +5,7 @@ import CommonInput from '../CommonInput';
 import CommonButton from '../CommonButton';
 import Colors from '../../assets/Colors';
 import CommonText from '../CommonText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tour = () => {
   const {
@@ -19,7 +20,19 @@ const Tour = () => {
     },
   });
 
-  const onSubmit = data => console.log(data);
+  const storeData = async value => {
+    try {
+      await AsyncStorage.setItem('@storage_Key', value);
+    } catch (e) {
+      console.log('e', e);
+      // saving error
+    }
+  };
+
+  const onSubmit = data => {
+    storeData('@storage_Key', JSON.stringify(data));
+    console.log(data);
+  };
 
   return (
     <View style={{margin: 10}}>

@@ -16,10 +16,10 @@ const Home = () => {
       <ScrollView>
         <Banner />
         <Tour />
-        <Offer />
+        {/* <Offer />
         <Visit />
         <Additional />
-        <Subscription />
+        <Subscription /> */}
       </ScrollView>
     </>
   );

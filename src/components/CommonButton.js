@@ -8,7 +8,7 @@ const CommonButton = ({buttontext, buttonStyle, labelStyle, onPress}) => {
     <TouchableHighlight
       activeOpacity={0.6}
       underlayColor={Colors.darkSecondary}
-      onPress={() => onPress}
+      onPress={onPress}
       style={[
         {
           backgroundColor: Colors.darkPrimary,

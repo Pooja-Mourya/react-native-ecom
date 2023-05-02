@@ -4,10 +4,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {fonts, Colors} from '../../assets/Assets';
 import {TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 
-const Header = ({navigation}) => {
+const Header = () => {
+  const {Navigation} = useNavigation();
   return (
     <View style={styles.headerContainer}>
       <Image
@@ -17,7 +19,7 @@ const Header = ({navigation}) => {
         }}
         style={{width: 100, height: 50, resizeMode: 'cover'}}
       />
-      {/* <TouchableOpacity onPress={() => navigation.openDrawer()}>
+      {/* <TouchableOpacity onPress={() => Navigation.toggleDrawer()}>
         <Entypo name="menu" size={32} color={Colors.darkGray} />
       </TouchableOpacity> */}
     </View>

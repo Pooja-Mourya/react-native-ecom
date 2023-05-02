@@ -43,9 +43,9 @@ export default function Banner() {
             height: width / 2,
           }}
         >
-          {bannerDetail.map(item => {
+          {bannerDetail.map((item, key) => {
             return (
-              <View>
+              <View key={key}>
                 <ImageBackground
                   key={item}
                   source={{uri: item.image}}
