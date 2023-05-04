@@ -52,47 +52,15 @@ const timeNum = [
     id: '12',
   },
 ];
-const Clock = ({setAddSome}) => {
+
+const Clock = props => {
+  const {setAddSome, alarmValue} = props;
+
+  //   console.log('alarmValue', alarmValue);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [keyboardInput, setKeyboardInput] = useState(false);
   const [mobility, setMobility] = useState('AM');
-  const {
-    control,
-    handleSubmit,
-    formState: {errors},
-    reset,
-  } = useForm({
-    defaultValues: {
-      minute: '',
-      second: '',
-    },
-  });
-
-  const storeData = async value => {
-    try {
-      await AsyncStorage.setItem('@storage_Key', value);
-    } catch (e) {
-      console.log('e', e);
-      // saving error
-    }
-  };
-
-  const onSubmit = data => {
-    if (hour && minute && mobility) {
-      storeData('@storage_Key', JSON.stringify(data));
-    } else {
-      ToastAndroid.show('time not found', ToastAndroid.SHORT);
-    }
-    // console.log(data);
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  const [dataValue, setDataValue] = useState('');
 
   const hour = currentTime.getHours() % 12;
   const minute = currentTime.getMinutes();
@@ -102,8 +70,30 @@ const Clock = ({setAddSome}) => {
   const minuteHandRotation = (minute * 6 + second * 0.1) % 360;
   const secondHandRotation = (second * 6) % 360;
 
-  const hourRef = useRef('').current;
-  const minuteRef = useRef('').current;
+  const hourRef = useRef(hour).current;
+  const minuteRef = useRef(minute).current;
+  const id = Math.random();
+
+  const onSubmit = async () => {
+    const alarm = {id: id, hourRef, minuteRef, mobility};
+    try {
+      let valueFor = [...alarmValue, alarm];
+      await AsyncStorage.setItem('@Key', JSON.stringify(valueFor));
+      setAddSome(false);
+      ToastAndroid.show('set alarm successfully', ToastAndroid.SHORT);
+    } catch (error) {
+      console.log('error', error);
+      ToastAndroid.show('time not found', ToastAndroid.SHORT);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <View
@@ -120,18 +110,7 @@ const Clock = ({setAddSome}) => {
       <View style={{margin: 20}}>
         <Text style={styles.addSomeText}>Select time</Text>
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          {keyboardInput ? (
-            <CommonInput
-              control={control}
-              name="minute"
-              rules={{required: true}}
-              placeholder="minute"
-              label="minute"
-              mode="flat"
-            />
-          ) : (
-            <Text style={styles.selectTime}>{hour}</Text>
-          )}
+          <Text style={styles.selectTime}>{hourRef}</Text>
 
           <Text
             style={{
@@ -143,18 +122,8 @@ const Clock = ({setAddSome}) => {
           >
             :
           </Text>
-          {keyboardInput ? (
-            <CommonInput
-              control={control}
-              name="second"
-              rules={{required: true}}
-              placeholder="second"
-              label="second"
-              mode="flat"
-            />
-          ) : (
-            <Text style={styles.selectTime}>{minute}</Text>
-          )}
+          <Text style={styles.selectTime}>{minuteRef}</Text>
+
           <View
             style={{
               borderWidth: 1,
@@ -371,7 +340,7 @@ const Clock = ({setAddSome}) => {
                 backgroundColor: null,
               }}
               buttontext={'Ok'}
-              onPress={() => onSubmit()}
+              onPress={data => onSubmit(data)}
             />
           </View>
         </View>

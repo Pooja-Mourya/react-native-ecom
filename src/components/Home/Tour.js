@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import CommonInput from '../CommonInput';
 import CommonButton from '../CommonButton';
@@ -20,19 +20,28 @@ const Tour = () => {
     },
   });
 
-  const storeData = async value => {
-    try {
-      await AsyncStorage.setItem('@storage_Key', value);
-    } catch (e) {
-      console.log('e', e);
-      // saving error
-    }
+  const onSubmit = async (data, props) => {
+    const {place, arrival, departure} = props;
+    let forStore = {place, arrival, departure};
+    let myData = [data, forStore];
+    await AsyncStorage.setItem('@storage_Key', JSON.stringify(myData));
   };
 
-  const onSubmit = data => {
-    storeData('@storage_Key', JSON.stringify(data));
-    console.log(data);
-  };
+  //   const getData = async () => {
+  //     try {
+  //       const jsonValue = await AsyncStorage.getItem('@storage_Key');
+
+  //       console.log('get value', jsonValue);
+
+  //       return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //     } catch (e) {
+  //       // error reading value
+  //       console.log('error', e);
+  //     }
+  //   };
+  //   useEffect(() => {
+  //     getData();
+  //   }, []);
 
   return (
     <View style={{margin: 10}}>

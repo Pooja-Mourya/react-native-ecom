@@ -10,11 +10,13 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {Card} from 'react-native-shadow-cards';
 import Alarm from './Alarm';
 import ImageRotation from './ImageRotation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button} from 'react-native';
 
 const About = () => {
   const [threeDots, setThreeDots] = useState(false);
   const [addSome, setAddSome] = useState(false);
-  const [getValue, setGetValue] = useState('');
+  const [alarmValue, setAlarmValue] = useState('');
 
   const {
     control,
@@ -27,34 +29,26 @@ const About = () => {
     },
   });
 
-  const onSubmit = data => console.log(data);
-
-  const getData = async () => {
+  const AlarmDataList = async () => {
     try {
-      const value = await AsyncStorage.getItem('@storage_Key');
-      if (value !== null) {
-        // value previously stored
-        setGetValue(value);
-        console.log('value', value);
-      }
-    } catch (e) {
-      // error reading value
+      const storedData = await AsyncStorage.getItem('@Key');
+      setAlarmValue(JSON.parse(storedData));
+    } catch (error) {
+      console.log('error parseData', error);
     }
   };
 
-  //   console.log('getValue', getValue);
-  //   useEffect(() => {
-  //     getData();
-  //   }, []);
+  useEffect(() => {
+    AlarmDataList();
+  }, []);
 
+  // console.log('alarmValue', alarmValue);
   return (
     <>
       <View
         style={{
           backgroundColor: Colors.primary,
           flex: 1,
-          //   flexDirection: 'column',
-          //   justifyContent: 'space-between',
         }}
       >
         <View
@@ -69,7 +63,10 @@ const About = () => {
             <Entypo name="dots-three-vertical" size={20} color={Colors.black} />
           </TouchableOpacity>
         </View>
-        <Alarm />
+
+        {/* <Button title="Async Data" onPress={() => AlarmDataList()} /> */}
+
+        <Alarm alarmValue={alarmValue} />
       </View>
       <Card
         style={{
@@ -89,7 +86,9 @@ const About = () => {
         </TouchableOpacity>
       </Card>
       {threeDots ? <ThreeDots setThreeDots={setThreeDots} /> : null}
-      {addSome ? <Clock setAddSome={setAddSome} /> : null}
+      {addSome ? (
+        <Clock setAddSome={setAddSome} alarmValue={alarmValue} />
+      ) : null}
       {/* <ImageRotation /> */}
     </>
   );
