@@ -9,14 +9,13 @@ import ThreeDots from './ThreeDots';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Card} from 'react-native-shadow-cards';
 import Alarm from './Alarm';
-import ImageRotation from './ImageRotation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Button} from 'react-native';
 
 const About = () => {
   const [threeDots, setThreeDots] = useState(false);
   const [addSome, setAddSome] = useState(false);
-  const [alarmValue, setAlarmValue] = useState('');
+  const [alarmValue, setAlarmValue] = useState([]);
+  const [alarmEdit, setAlarmEdit] = useState(null);
 
   const {
     control,
@@ -42,7 +41,10 @@ const About = () => {
     AlarmDataList();
   }, []);
 
-  // console.log('alarmValue', alarmValue);
+  const handleDataChange = newData => {
+    setAlarmEdit(newData);
+  };
+
   return (
     <>
       <View
@@ -58,7 +60,7 @@ const About = () => {
             margin: 10,
           }}
         >
-          <Text>About</Text>
+          <Text style={{fontSize: 20, fontWeight: '400'}}>About</Text>
           <TouchableOpacity onPress={() => setThreeDots(!threeDots)}>
             <Entypo name="dots-three-vertical" size={20} color={Colors.black} />
           </TouchableOpacity>
@@ -66,7 +68,14 @@ const About = () => {
 
         {/* <Button title="Async Data" onPress={() => AlarmDataList()} /> */}
 
-        <Alarm alarmValue={alarmValue} />
+        <Alarm
+          onDataChange={handleDataChange}
+          alarmValue={alarmValue}
+          AlarmDataList={AlarmDataList}
+          addSome={addSome}
+          setAddSome={setAddSome}
+        />
+        {/* <Alarm /> */}
       </View>
       <Card
         style={{
@@ -86,9 +95,13 @@ const About = () => {
         </TouchableOpacity>
       </Card>
       {threeDots ? <ThreeDots setThreeDots={setThreeDots} /> : null}
-      {addSome ? (
-        <Clock setAddSome={setAddSome} alarmValue={alarmValue} />
-      ) : null}
+      {addSome && (
+        <Clock
+          alarmEdit={alarmEdit}
+          setAddSome={setAddSome}
+          alarmValue={alarmValue}
+        />
+      )}
       {/* <ImageRotation /> */}
     </>
   );

@@ -27,7 +27,7 @@ const DropdownCom = ({
         </Text>
       );
     }
-    return null;
+    return;
   };
 
   return (

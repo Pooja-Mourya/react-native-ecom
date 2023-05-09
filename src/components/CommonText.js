@@ -6,11 +6,11 @@ import Colors from '../assets/Colors';
 const CommonText = ({titleText, subTitleText}) => {
   return (
     <View style={{marginVertical: 30}}>
-      {titleText ? (
+      {titleText && (
         <Text style={[styles.findText, {color: Colors.black, fontSize: 20}]}>
           {titleText}
         </Text>
-      ) : null}
+      )}
       {subTitleText && <Text style={styles.findText}>{subTitleText}</Text>}
     </View>
   );

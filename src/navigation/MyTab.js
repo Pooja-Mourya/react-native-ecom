@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Colors} from '../assets/Assets';
+import Colors from '../assets/Colors';
 import Banner from '../components/Home/Banner';
 import Home from '../components/Home/Home';
 import About from '../components/about/About';
@@ -19,13 +19,13 @@ const MyTab = () => {
         tabBarActiveTintColor: Colors.black,
         tabBarShowLabel: false,
         tabBarActiveBackgroundColor: {},
-        // tabBarInactiveBackgroundColor: 'blue',
-        // tabBarIconStyle: {
-        //   borderWidth: 2,
-        //   width: 50,
-        //   borderRadius: 100,
-        //   backgroundColor: 'cyan',
-        // },
+        tabBarInactiveBackgroundColor: Colors.primary,
+        tabBarIconStyle: {
+          //   borderWidth: 2,
+          //   width: 50,
+          //   borderRadius: 100,
+          backgroundColor: 'cyan',
+        },
       }}
     >
       <Tab.Screen

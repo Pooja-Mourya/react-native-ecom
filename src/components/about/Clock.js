@@ -1,4 +1,5 @@
 import {
+  Alert,
   Animated,
   Easing,
   StyleSheet,
@@ -54,14 +55,12 @@ const timeNum = [
 ];
 
 const Clock = props => {
-  const {setAddSome, alarmValue} = props;
+  const {setAddSome, alarmValue, alarmEdit} = props;
 
   //   console.log('alarmValue', alarmValue);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [keyboardInput, setKeyboardInput] = useState(false);
   const [mobility, setMobility] = useState('AM');
-  const [dataValue, setDataValue] = useState('');
-
   const hour = currentTime.getHours() % 12;
   const minute = currentTime.getMinutes();
   const second = currentTime.getSeconds();
@@ -87,6 +86,21 @@ const Clock = props => {
     }
   };
 
+  const onSubmitUpdate = () => {
+    let updateAlarm = [];
+    if (alarmValue !== null) {
+      //   updateAlarm = JSON.parse(alarmEdit);
+      updateAlarm = alarmValue;
+      console.log('updateAlarm', updateAlarm);
+      setAddSome(false);
+    }
+    // updateAlarm.filter(n => {
+    //   if (n.id == alarm.id) {
+    //     console.log('n', n);
+    //   }
+    // });
+  };
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -95,6 +109,15 @@ const Clock = props => {
     return () => clearInterval(intervalId);
   }, []);
 
+  //   console.log('alarmEdit', alarmEdit);
+
+  // useEffect(() => {
+  //   if (alarmEdit) {
+  //     alarmEdit.hourRef, alarmEdit.minuteRef, alarmEdit.mobility;
+  //   } else {
+  //     Alert.alert('function not working');
+  //   }
+  // }, []);
   return (
     <View
       style={{
@@ -110,8 +133,9 @@ const Clock = props => {
       <View style={{margin: 20}}>
         <Text style={styles.addSomeText}>Select time</Text>
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <Text style={styles.selectTime}>{hourRef}</Text>
-
+          <Text style={styles.selectTime}>
+            {alarmEdit ? alarmEdit.hourRef : hourRef}
+          </Text>
           <Text
             style={{
               fontSize: 32,
@@ -122,7 +146,9 @@ const Clock = props => {
           >
             :
           </Text>
-          <Text style={styles.selectTime}>{minuteRef}</Text>
+          <Text style={styles.selectTime}>
+            {alarmEdit ? alarmEdit.minuteRef : minuteRef}
+          </Text>
 
           <View
             style={{
@@ -340,7 +366,9 @@ const Clock = props => {
                 backgroundColor: null,
               }}
               buttontext={'Ok'}
-              onPress={data => onSubmit(data)}
+              onPress={data => {
+                alarmEdit ? onSubmitUpdate() : onSubmit(data);
+              }}
             />
           </View>
         </View>

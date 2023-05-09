@@ -6,12 +6,14 @@ import MyTab from './src/navigation/MyTab';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Colors from './src/assets/Colors';
+import MyStack from './src/navigation/MyStack';
 
 const App = () => {
   return (
     <NavigationContainer>
       <StatusBar animated={true} backgroundColor={Colors.primary} />
-      <MyTab />
+      {/* <MyTab /> */}
+      <MyStack />
     </NavigationContainer>
   );
 };

@@ -1,83 +1,67 @@
 import {
   Alert,
+  RefreshControl,
   StyleSheet,
   Text,
   ToastAndroid,
   TouchableOpacity,
   View,
+  Switch,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Card} from 'react-native-shadow-cards';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../../assets/Colors';
-import {Switch} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import SelectDay from './SelectDay';
+import CommonButton from '../CommonButton';
+import Label from './Label';
+import {useScrollToTop} from '@react-navigation/native';
+import {FAB} from 'react-native-paper';
+import SwitchButton from './SwitchButton';
+import {Animated} from 'react-native';
 
-const days = [
-  {
-    id: '1',
-    day: 'sunday',
-  },
-  {
-    id: '2',
-    day: 'monday',
-  },
-  {
-    id: '3',
-    day: 'tuesday',
-  },
-  {
-    id: '4',
-    day: 'wednesday',
-  },
-  {
-    id: '5',
-    day: 'thursday',
-  },
-  {
-    id: '6',
-    day: 'friday',
-  },
-  {
-    id: '7',
-    day: 'saturday',
-  },
-];
-
-const Alarm = props => {
-  const {alarmValue} = props;
+const Alarm = ({
+  alarmValue,
+  AlarmDataList,
+  addSome,
+  setAddSome,
+  onDataChange,
+}) => {
   const [more, setMore] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [haveDays, setHaveDays] = useState([]);
   const [y, setY] = useState(null);
-  const [select, setSelect] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState(false);
+  const [addLabel, setAddLabel] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [scrollEvent, setScrollEvent] = useState(0);
 
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const SCROLL_EVENT_WIDTH = 300;
 
-  const selectDaysFunction = item => {
-    let index = haveDays.findIndex(d => d.id == item.id);
-    if (index == -1) {
-      let tempDay = [...haveDays, item];
-      setHaveDays(tempDay);
+  const deleteAlarmFunction = item => {
+    if (alarmValue.splice(item, 1)) {
+      ToastAndroid.show('alarm deleted', ToastAndroid.SHORT);
+      setMore(false);
+      setDeleteMessage(true);
     } else {
-      let tempArray = [...haveDays];
-      tempArray.splice(index, 1);
-      setHaveDays(tempArray);
+      ToastAndroid.show('error in deleting alarm ', ToastAndroid.SHORT);
     }
   };
 
-  let myText = '';
-  for (let i of haveDays) {
-    myText += i.day + '  ';
-  }
+  const flatListRef = useRef(null);
+
+  const handlePress = item => {
+    onDataChange(item);
+  };
 
   return (
     <>
       <FlatList
         data={alarmValue}
+        ref={flatListRef}
+        onScroll={e => setScrollEvent(e.nativeEvent.contentOffset.y)}
         keyExtractor={it => it.id}
         renderItem={({item, index}) => {
-          //   console.log('index', index);
           return (
             <Card
               style={{margin: 20, padding: 10, backgroundColor: Colors.primary}}
@@ -92,92 +76,167 @@ const Alarm = props => {
                   justifyContent: 'space-between',
                 }}
               >
-                <Text>label</Text>
+                {y === index && more ? (
+                  <TouchableOpacity
+                    style={{}}
+                    onPress={() => setAddLabel(!addLabel)}
+                  >
+                    <Text style={{}}>
+                      <MaterialCommunityIcons
+                        name="label-outline"
+                        size={18}
+                        color={Colors.white}
+                      />
+                      {''}
+                      Add label
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <Text></Text>
+                )}
                 <AntDesign
                   name={more ? 'downcircle' : 'upcircle'}
                   size={25}
                   color={'white'}
                 />
               </TouchableOpacity>
-              <View style={{flexDirection: 'row'}}>
-                <Text>{item.hourRef}</Text>
-                <Text>:</Text>
-                <Text>{item.minuteRef}</Text>
-                <Text>{item.mobility}</Text>
-              </View>
+              <TouchableOpacity
+                style={{flexDirection: 'row'}}
+                onPress={() => {
+                  setAddSome(true);
+                  handlePress(item);
+                }}
+              >
+                <Text
+                  style={{fontSize: 40, color: Colors.white, fontWeight: '400'}}
+                >
+                  {item.hourRef}
+                </Text>
+                <Text
+                  style={{fontSize: 40, color: Colors.white, fontWeight: '400'}}
+                >
+                  :
+                </Text>
+                <Text
+                  style={{fontSize: 40, color: Colors.white, fontWeight: '400'}}
+                >
+                  {item.minuteRef}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textTransform: 'lowercase',
+                    marginTop: 23,
+                    color: Colors.white,
+                    fontWeight: '400',
+                  }}
+                >
+                  {item.mobility}
+                </Text>
+              </TouchableOpacity>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}
               >
-                <Text>Tomorrow</Text>
-                {/* <Switch
-                  trackColor={{false: '#767577', true: '#81b0ff'}}
-                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
-                /> */}
+                <Text style={{color: Colors.white}}>Tomorrow</Text>
+                <SwitchButton />
               </View>
-              {!index && (
-                <Text>
-                  {myText.split('day') === haveDays
-                    ? 'every day'
-                    : myText.split('day')}
-                </Text>
-              )}
-              {y === index && more ? (
+
+              {y === index && more && (
                 <View>
-                  <FlatList
-                    horizontal={true}
-                    data={days}
-                    keyExtractor={item => item.id}
-                    renderItem={({item, index1}) => {
-                      //   console.log('index1', index1);
-                      //   console.log('item', item);
-                      return (
-                        <Card
-                          style={{
-                            width: 40,
-                            margin: 5,
-                            padding: 5,
-                            height: 40,
-                            justifyContent: 'center',
-                            borderRadius: 50,
-                            backgroundColor: haveDays.find(
-                              currentValue => currentValue.id == item.id,
-                            )
-                              ? 'deepskyblue'
-                              : Colors.primary,
-                          }}
-                        >
-                          <TouchableOpacity
-                            onPress={() => {
-                              selectDaysFunction(item);
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textAlign: 'center',
-                                fontWeight: '700',
-                                color: Colors.white,
-                                textTransform: 'uppercase',
-                              }}
-                            >
-                              {item.day.slice(0, 1)}
-                            </Text>
-                          </TouchableOpacity>
-                        </Card>
-                      );
+                  <SelectDay />
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteAlarmFunction(item.id);
                     }}
-                  />
+                    style={{flexDirection: 'row', margin: 10}}
+                  >
+                    <AntDesign name="delete" size={25} color={'red'} />
+                    <Text>Delete</Text>
+                  </TouchableOpacity>
                 </View>
-              ) : null}
+              )}
             </Card>
           );
         }}
+        onEndReachedThreshold={0.1}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => AlarmDataList()}
+          />
+        }
       />
+      {deleteMessage && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            // margin: 10,
+            backgroundColor: 'teal',
+            alignItems: 'center',
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text>Alarm Deleted</Text>
+          <CommonButton
+            buttontext={'Undo'}
+            buttonStyle={{backgroundColor: null}}
+          />
+        </View>
+      )}
+
+      {addLabel && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            backgroundColor: 'red',
+            zIndex: 3,
+            margin: 50,
+          }}
+        >
+          <View>
+            <Label />
+          </View>
+        </View>
+      )}
+
+      {scrollEvent > SCROLL_EVENT_WIDTH && (
+        <FAB
+          icon="arrow-up-thin"
+          style={styles.fab}
+          onPress={() =>
+            flatListRef.current.scrollToOffset({offset: 0, animated: true})
+          }
+        />
+      )}
     </>
   );
 };
 
 export default Alarm;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 15,
+    left: 0,
+    bottom: 0,
+    borderRadius: 50,
+  },
+});
+
+// import {StyleSheet, Text, View} from 'react-native';
+// import React from 'react';
+
+// const Alarm = () => {
+//   return (
+//     <View>
+//       <Text>Alarm</Text>
+//     </View>
+//   );
+// };
+
+// export default Alarm;
+
+// const styles = StyleSheet.create({});
