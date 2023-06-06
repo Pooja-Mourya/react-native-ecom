@@ -13,6 +13,7 @@ import HomeScreen from './DrawerScreens/HomeScreen';
 import SettingsScreen from './DrawerScreens/SettingScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
+import MyTab from './TabScreen/MyTab';
 // import MyTab from './TabScreen/Mytab';
 
 const Stack = createStackNavigator();
@@ -53,7 +54,7 @@ const SettingScreenStack = ({navigation}) => {
         headerStyle: {
           backgroundColor: '#307ecc', //Set Header color
         },
-        headerTintColor: '#fff', //Set Header text color
+        headerTintColor: 'white', //Set Header text color
         headerTitleStyle: {
           fontWeight: 'bold', //Set Header text style
         },
@@ -61,7 +62,7 @@ const SettingScreenStack = ({navigation}) => {
     >
       <Stack.Screen
         name="SettingsScreen"
-        component={SettingsScreen}
+        component={MyTab}
         options={{
           title: 'Settings', //Set Header Title
         }}

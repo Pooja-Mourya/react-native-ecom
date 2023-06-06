@@ -14,6 +14,7 @@ import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import MyTab from './Screen/TabScreen/MyTab';
 
 const Stack = createStackNavigator();
 
@@ -71,6 +72,7 @@ const App = () => {
           options={{headerShown: false}}
         />
       </Stack.Navigator>
+      {/* <MyTab /> */}
     </NavigationContainer>
   );
 };
